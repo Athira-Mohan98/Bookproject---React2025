@@ -15,7 +15,24 @@ const db = require('./config/db')
 const bookServer = express()
 
 //6 implementing cors 
-bookServer.use(cors())
+
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://bookstore-frontend-mar-25.vercel.app'
+]
+
+bookServer.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // adjust as needed
+  credentials: true // only if you're using cookies or auth headers
+
+}))
 //7 implementing middleware
 bookServer.use(express.json()) // Returns middleware that only parses json
 // bookServer.use(appMiddleware)
